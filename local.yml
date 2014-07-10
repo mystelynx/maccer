@@ -69,9 +69,10 @@
     command: brew cask alfred link
 
   - name: setup dotfiles
-    copy: >
+    file: >
       src={{item}}
       dest=~/.{{item|basename}}
+      state=link
     with_fileglob:
       - dotfiles/*
 
