@@ -39,6 +39,13 @@
       - { name: 'brew-cask'}
       - { name: 'coreutils'}
       - { name: 'git'}
+      - { name: 'tmux'}
+      - { name: 'tmux-mem-cpu-load'}
+      - { name: 'zsh'}
+      - { name: 'zsh-completions'}
+      - { name: 'zsh-lovers'}
+      - { name: 'zsh-syntax-highlighting'}
+      - { name: 'zsh-history-substring-search'}
 
   - name: install homebrew-cask packages
     homebrew_cask: name={{item.name}} state={{item.state|default('present')}}
