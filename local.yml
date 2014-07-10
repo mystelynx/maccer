@@ -15,6 +15,17 @@
   - email: 'me@urau.la'
 
   tasks:
+  - name: check if default ansible-hosts exists
+    stat: path=/etc/ansible/hosts
+    register: default_ansible_hosts
+
+  - name: create default ansible-hosts file
+    copy: >
+      content='127.0.0.1	ansible_connection=local ansible_sudo_pass={{ansible_env.SUDO_PASS}}'
+      dest=/etc/ansible/hosts
+    sudo: yes
+    when: not default_ansible_hosts.stat.exists
+
   - name: check if homebrew is installed
     command: test -e /usr/local/bin/brew
     register: homebrew_installed
