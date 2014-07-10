@@ -81,7 +81,7 @@
     command: brew cask alfred link
 
   - name: set zsh as a default shell
-    command: chsh -s /bin/zsh
+    command: chsh -s /bin/zsh {{ansible_user_id}}
     when: ansible_env.SHELL != '/bin/zsh'
     sudo: yes
 
