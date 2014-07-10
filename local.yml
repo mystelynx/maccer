@@ -68,6 +68,11 @@
   - name: add caskroom to alfred search path
     command: brew cask alfred link
 
+  - name: set zsh as a default shell
+    command: chsh -s /bin/zsh
+    when: ansible_env.SHELL != '/bin/zsh'
+    sudo: yes
+
   - name: setup dotfiles
     file: >
       src={{item}}
