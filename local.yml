@@ -1,0 +1,72 @@
+# base setup playbook.
+# 
+# preconditions:
+# - ansible installed.
+# - xcode command line tools installed.
+#
+
+- name: base setup playbook
+  hosts: 127.0.0.1
+  connection: local
+
+  vars:
+  - now: "{{' '.join([ansible_date_time.date, ansible_date_time.time])}}"
+  - nickname: mystelynx
+  - email: 'me@urau.la'
+
+  tasks:
+  - name: check if homebrew is installed
+    command: test -e /usr/local/bin/brew
+    register: homebrew_installed
+    ignore_errors: yes
+
+  - name: install homebrew
+    raw: ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+    when: homebrew_installed|failed
+
+  - name: update homebrew itself
+    homebrew: update_homebrew=yes 
+
+  - name: tap new homebrew repos
+    homebrew_tap: tap={{item}} state=present
+    with_items:
+      - caskroom/cask
+
+  - name: install homebrew packages
+    homebrew: name={{item.name}} state={{item.state|default('latest')}} options={{item.options|default('')}}
+    with_items:
+      - { name: 'sl'}
+      - { name: 'brew-cask'}
+      - { name: 'coreutils'}
+      - { name: 'git'}
+
+  - name: install homebrew-cask packages
+    homebrew_cask: name={{item.name}} state={{item.state|default('present')}}
+    with_items:
+      - { name: 'vagrant'}
+      - { name: 'google-chrome'}
+      - { name: 'google-japanese-ime'}
+      - { name: 'caffeine'}
+      - { name: 'xtrafinder'}
+      - { name: 'alfred'}
+      - { name: 'bettertouchtool'}
+      - { name: 'keyremap4macbook'}
+      - { name: 'optimal-layout'}
+      - { name: 'virtualbox'}
+      - { name: 'java'}
+      - { name: 'iterm2'}
+      - { name: 'intellij-idea'}
+  
+  - name: add caskroom to alfred search path
+    command: brew cask alfred link
+
+  - name: setup dotfiles
+    copy: >
+      src={{item}}
+      dest=~/.{{item|basename}}
+    with_fileglob:
+      - dotfiles/*
+
+  - name: debug
+    debug: msg="hello"
+
