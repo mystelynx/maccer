@@ -56,6 +56,7 @@
       - { name: 'java'}
       - { name: 'iterm2'}
       - { name: 'intellij-idea'}
+      - { name: 'shortcat'}
   
   - name: add caskroom to alfred search path
     command: brew cask alfred link
